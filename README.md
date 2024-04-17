@@ -24,7 +24,7 @@ The Email Client Application is a Python-based tool developed to simplify the pr
 
 1. Clone the repository:
    ```
-   git clone 
+   git clone https://github.com/elmahygurl/Email-Client-Application
    ```
 
 2. Install dependencies:
