@@ -1,5 +1,6 @@
 import tkinter as tk
-from tkinter import messagebox
+from tkinter import messagebox, ttk
+#from PIL import Image, ImageTk  #for adding photo in GUI background
 import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
@@ -75,52 +76,49 @@ def send_email_gui():
         messagebox.showerror("Error", "Invalid recipient email format")
         return
 
-    #validate password
-    # if len(sender_password) < 6:
-    #     messagebox.showerror("Error", "Password must be at least 6 characters long")
-    #     return
-
     send_email(sender_email, sender_password, recipient_email, subject, body)
 
 #GUI setup
 root = tk.Tk()
 root.title("Send Email")
 
-# Sender Email
-sender_email_label = tk.Label(root, text="Sender Email:")
-sender_email_label.grid(row=0, column=0, padx=5, pady=5)
-sender_email_entry = tk.Entry(root)
-sender_email_entry.grid(row=0, column=1, padx=5, pady=5)
+#stylingggg
+root.configure(bg="#A1C398")
+style = ttk.Style()
+style.configure("TButton", background="#FA7070", foreground="black")
+style.map("TButton", background=[('pressed', '#FA7070'), ('active', '#FA7070')])
+style.configure("TEntry", background="#C6EBC5", foreground="black")
+style.configure("TLabel", background="#A1C398", foreground="black")
 
-# Sender Password
-sender_password_label = tk.Label(root, text="Sender Password:")
-sender_password_label.grid(row=1, column=0, padx=5, pady=5)
-sender_password_entry = tk.Entry(root, show="*")
-sender_password_entry.grid(row=1, column=1, padx=5, pady=5)
 
-# Recipient Email
-recipient_email_label = tk.Label(root, text="Recipient Email:")
-recipient_email_label.grid(row=2, column=0, padx=5, pady=5)
-recipient_email_entry = tk.Entry(root)
-recipient_email_entry.grid(row=2, column=1, padx=5, pady=5)
+#sender email and pass
+sender_email_label = ttk.Label(root, text="Sender Email:")
+sender_email_label.grid(row=0, column=0)
+sender_email_entry = ttk.Entry(root)
+sender_email_entry.grid(row=0, column=1)
+sender_password_label = ttk.Label(root, text="Sender Password:")
+sender_password_label.grid(row=1, column=0)
+sender_password_entry = ttk.Entry(root, show="*")
+sender_password_entry.grid(row=1, column=1)
 
-# Subject
-subject_label = tk.Label(root, text="Subject:")
-subject_label.grid(row=3, column=0, padx=5, pady=5)
-subject_entry = tk.Entry(root)
-subject_entry.grid(row=3, column=1, padx=5, pady=5)
+#recipient email
+recipient_email_label = ttk.Label(root, text="Recipient Email:")
+recipient_email_label.grid(row=2, column=0)
+recipient_email_entry = ttk.Entry(root)
+recipient_email_entry.grid(row=2, column=1)
 
-# Body
-body_label = tk.Label(root, text="Body:")
-body_label.grid(row=4, column=0, padx=5, pady=5)
+# subject and body and send
+subject_label = ttk.Label(root, text="Subject:")
+subject_label.grid(row=3, column=0)
+subject_entry = ttk.Entry(root)
+subject_entry.grid(row=3, column=1)
+
+body_label = ttk.Label(root, text="Body:")
+body_label.grid(row=4, column=0)
 body_entry = tk.Text(root, height=5, width=30)
-body_entry.grid(row=4, column=1, padx=5, pady=5)
+body_entry.grid(row=4, column=1)
 
-# Send Button
-send_button = tk.Button(root, text="Send Email", command=send_email_gui)
-send_button.grid(row=5, column=0, columnspan=2, padx=5, pady=5, sticky="we")
+send_button = ttk.Button(root, text="Send Email", command=send_email_gui, style="Send.TButton")
+send_button.grid(row=5, column=0, columnspan=2)
 
-root.mainloop()        
-
-    
-
+root.mainloop() 
