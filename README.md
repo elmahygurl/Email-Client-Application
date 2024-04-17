@@ -24,12 +24,12 @@ The Email Client Application is a Python-based tool developed to simplify the pr
 
 1. Clone the repository:
    ```
-   git clone https://github.com/your-email-client-repo.git
+   git clone 
    ```
 
 2. Install dependencies:
    ```
-   pip install -r requirements.txt
+   pip install ...
    ```
 
 ## Usage
