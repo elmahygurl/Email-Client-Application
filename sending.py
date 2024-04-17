@@ -1,16 +1,11 @@
 import tkinter as tk
 from tkinter import messagebox
-from plyer import notification
 import smtplib
-import imaplib
-import email
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 
-def is_valid_email(email):
+def is_valid_email(email): #checking if email format is valid
     """
-    Check if the email address is valid.
-
     Parameters:
         email (str): Email address to be validated.
 
@@ -33,88 +28,37 @@ def send_email(sender_email, sender_password, recipient_email, subject, body):
         body (str): Email body.
     """
     try:
-        # Create a multipart message
+        #create multipart msg
         msg = MIMEMultipart()
         msg['From'] = sender_email
         msg['To'] = recipient_email
         msg['Subject'] = subject
-        
-        # Add body to the email
         msg.attach(MIMEText(body, 'plain'))
 
-        # Determine SMTP server based on sender's email domain
+        #determining SMTP server based on sender's  domain
         domain = sender_email.split('@')[1]
-        smtp_servers = {
+        smtp_servers = {    #we can add more email providers and their IMAP servers
             'gmail.com': 'smtp.gmail.com',
             'outlook.com': 'smtp-mail.outlook.com',
             'hotmail.com': 'smtp-mail.outlook.com',
             'icloud.com': 'smtp.mail.me.com',
-            'alexu.edu.eg': 'smtp.alexu.edu.eg',
-            # Add more email providers and their SMTP servers here
+            #'alexu.edu.eg': 'smtp.alexu.edu.eg',   
         }
-
         if domain in smtp_servers:
             smtp_server = smtp_servers[domain]
         else:
             messagebox.showerror("Error", "Unsupported email provider")
             return
 
-        # Connect to the SMTP server
+        #connecting to SMTP server
         with smtplib.SMTP(smtp_server, 587) as server:
             server.starttls()
             server.login(sender_email, sender_password)
             server.send_message(msg)
+            messagebox.showinfo("Success", "Email sent successfully!")
             print("Email sent successfully!")
     except Exception as e:
-        print("Error occurred while sending email:", e)
-
-def receive_email(username, password):
-    """
-    Receive the latest email using IMAP protocol and print its body.
-
-    Parameters:
-        username (str): User's email username.
-        password (str): User's email password.
-    """
-    try:
-        # Determine IMAP server based on username's email domain
-        domain = username.split('@')[1]
-        imap_servers = {
-            'gmail.com': 'imap.gmail.com',
-            'outlook.com': 'outlook.office365.com',
-            'hotmail.com': 'smtp-mail.outlook.com',
-            'icloud.com': 'smtp.mail.me.com',
-            #'alexu.edu.eg': 'smtp.alexu.edu.eg',
-            # Add more email providers and their IMAP servers here
-        }
-
-        if domain in imap_servers:
-            imap_server = imap_servers[domain]
-        else:
-            messagebox.showerror("Error", "Unsupported email provider")
-            return
-
-        # Connect to the IMAP server
-        with imaplib.IMAP4_SSL(imap_server) as mail:
-            mail.login(username, password)
-            mail.select('inbox')
-            result, data = mail.search(None, 'ALL')
-            latest_email_id = data[0].split()[-1]
-            result, data = mail.fetch(latest_email_id, '(RFC822)')
-            raw_email = data[0][1]
-            email_message = email.message_from_bytes(raw_email)
-            print('From:', email_message['From'])
-            print('Subject:', email_message['Subject'])
-            print('Body:')
-            print(email_message.get_payload())
-            # Send push notification
-            notification.notify(
-                title='New Email',
-                message=f'From: {email_message["From"]}\nSubject: {email_message["Subject"]}',
-                app_name='Email Client'
-            )
-    except Exception as e:
-        print("Error occurred while receiving email:", e)
+        messagebox.showerror("Error", f"Error occurred while sending email: {e}")
 
 def send_email_gui():
     sender_email = sender_email_entry.get()
@@ -123,7 +67,7 @@ def send_email_gui():
     subject = subject_entry.get()
     body = body_entry.get('1.0', 'end-1c')
 
-    # Validate email format
+    #validate all inputed emails formats
     if not is_valid_email(sender_email):
         messagebox.showerror("Error", "Invalid sender email format")
         return
@@ -131,32 +75,16 @@ def send_email_gui():
         messagebox.showerror("Error", "Invalid recipient email format")
         return
 
-    # Validate password
-    if len(sender_password) < 6:
-        messagebox.showerror("Error", "Password must be at least 6 characters long")
-        return
+    #validate password
+    # if len(sender_password) < 6:
+    #     messagebox.showerror("Error", "Password must be at least 6 characters long")
+    #     return
 
     send_email(sender_email, sender_password, recipient_email, subject, body)
 
-def receive_email_gui():
-    sender_email = sender_email_entry.get()
-    sender_password = sender_password_entry.get()
-
-    # Validate email format
-    if not is_valid_email(sender_email):
-        messagebox.showerror("Error", "Invalid sender email format")
-        return
-
-    # Validate password
-    if len(sender_password) < 6:
-        messagebox.showerror("Error", "Password must be at least 6 characters long")
-        return
-
-    receive_email(sender_email, sender_password)
-
-# GUI setup
+#GUI setup
 root = tk.Tk()
-root.title("Email Client")
+root.title("Send Email")
 
 # Sender Email
 sender_email_label = tk.Label(root, text="Sender Email:")
@@ -192,8 +120,7 @@ body_entry.grid(row=4, column=1, padx=5, pady=5)
 send_button = tk.Button(root, text="Send Email", command=send_email_gui)
 send_button.grid(row=5, column=0, columnspan=2, padx=5, pady=5, sticky="we")
 
-# Receive Button
-receive_button = tk.Button(root, text="Receive Email", command=receive_email_gui)
-receive_button.grid(row=6, column=0, columnspan=2, padx=5, pady=5, sticky="we")
+root.mainloop()        
 
-root.mainloop()
+    
+
